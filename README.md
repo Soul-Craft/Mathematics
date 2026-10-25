@@ -4,7 +4,7 @@ Linear algebra, linear regression, statistics and the math behind deep learning,
 
 ## Running it
 
-Python 3.15 (`.python-version`). One `requirements.txt` covers every folder:
+Python 3.15. One `requirements.txt` covers every folder:
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
