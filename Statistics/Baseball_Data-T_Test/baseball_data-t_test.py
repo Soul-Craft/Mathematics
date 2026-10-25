@@ -42,7 +42,7 @@ def check_for_significance(t, p, pcrit):
     if p <= pcrit:
         return False, [t,p]
     else:
-        return True [t,p]
+        return True, [t,p]
 
 def compare_averages(filename):
     # Compares the batting averages of left hand and right hand hitters to see if their is a significant difference

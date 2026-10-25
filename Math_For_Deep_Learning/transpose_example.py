@@ -51,7 +51,10 @@ print(weights.shape)
 # displays the following result:
 # (3, 4)
 
-print(np.matmul(inputs, weights))
+try:
+    print(np.matmul(inputs, weights))
+except ValueError as e:
+    print("ValueError:", e)
 # displays the following error:
 # ValueError: shapes (1,4) and (3,4) not aligned: 4 (dim 1) != 3 (dim 0)
 
