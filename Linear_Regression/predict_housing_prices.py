@@ -1,15 +1,19 @@
 from sklearn.linear_model import LinearRegression
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
+import pandas as pd
 
-boston_data = load_boston()
-x = boston_data['data']
-y = boston_data['target']
+# scikit-learn 1.2 removed load_boston; the California housing set is its documented replacement.
+# The first call downloads it (about 400 KB) and caches it in ~/scikit_learn_data.
+housing_data = fetch_california_housing(as_frame=True)
+x = housing_data['data']
+y = housing_data['target']
 
 model = LinearRegression().fit(x, y)
 
-sample_house = [[2.29690000e-01, 0.00000000e+00, 1.05900000e+01, 0.00000000e+00, 4.89000000e-01,
-                6.32600000e+00, 5.25000000e+01, 4.35490000e+00, 4.00000000e+00, 2.77000000e+02,
-                1.86000000e+01, 3.94870000e+02, 1.09700000e+01]]
+# MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude
+sample_house = pd.DataFrame([[8.3252, 41.0, 6.98412698, 1.02380952, 322.0, 2.55555556, 37.88, -122.23]],
+                            columns=housing_data['feature_names'])
 
+# Median house value, in units of $100,000
 prediction = model.predict(sample_house)
 print(prediction)

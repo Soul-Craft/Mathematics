@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scripts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      MPLBACKEND: Agg   # plt.show() is a no-op instead of opening a window
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m compileall -q .
+      # Each script reads its data files relative to its own folder, so run it from there.
+      - name: run every script
+        run: |
+          for script in $(git ls-files '*.py'); do
+            echo "::group::$script"
+            (cd "$(dirname "$script")" && python "$(basename "$script")")
+            echo "::endgroup::"
+          done
+      - name: run the notebook's code cells
+        run: |
+          python - <<'PY'
+          import json
+          nb = json.load(open('Math_For_Deep_Learning/demo.ipynb'))
+          exec('\n'.join(''.join(c['source']) for c in nb['cells'] if c['cell_type'] == 'code'))
+          PY
+
+  # Owner, 2026-10-25: every Dependabot update merges once all other jobs pass, majors too.
+  dependabot-merge:
+    needs: [scripts]
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    permissions: {contents: write, pull-requests: write}
+    steps:
+      - run: gh pr merge --squash --delete-branch "$PR"
+        env: {GH_TOKEN: "${{ github.token }}", PR: "${{ github.event.pull_request.html_url }}"}

@@ -10,7 +10,7 @@ y_values = dataframe[['Life_Expectancy']]
 #train model on data
 regression = LinearRegression()
 regression.fit(x_values, y_values)
-predict = regression.predict(21.07931)
+predict = regression.predict(pd.DataFrame({'BMI': [21.07931]}))
 print(predict)
 
 #visualize results

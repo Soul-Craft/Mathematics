@@ -5,7 +5,7 @@ from decimal import Decimal, getcontext
 from vector import Vector
 from line import *
 from plane import *
-from linsys import *
+from linear_system import *
 
 # Get Context
 getcontext().prec = 1

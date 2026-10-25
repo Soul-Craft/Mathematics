@@ -112,10 +112,7 @@ class Plane(object):
         n1 = self.normal_vector
         n2 = l.normal_vector
 
-        x0 = self.basepoint
-        y0 = l.basepoint
-        basepoint_difference = x0.minus(y0)
-
+        # A zero normal vector has no basepoint, so check for one before using basepoints.
         if n1.is_zero():
             if not n2.is_zero():
                 return False
@@ -127,6 +124,10 @@ class Plane(object):
 
         if not self.is_parallel_to(l):
             return False
+
+        x0 = self.basepoint
+        y0 = l.basepoint
+        basepoint_difference = x0.minus(y0)
 
         return basepoint_difference.is_orthogonal_to(n1)
 
